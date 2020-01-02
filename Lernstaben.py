@@ -25,7 +25,16 @@ def main():
     )
     args = parser.parse_args()
 
-    with Lernstaben() as lernstaben:
+    char_seq_digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+    char_seq_alphabet = [
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+        "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
+        "Y", "Z"
+    ]
+    char_seq = []
+    char_seq.extend(char_seq_digits)
+    char_seq.extend(char_seq_alphabet)
+    with Lernstaben(char_seq) as lernstaben:
         if args.mode == "vorlesen":
             read_characters(lernstaben)
         elif args.mode == "vorlesen-interaktiv":
@@ -74,15 +83,10 @@ class Lernstaben:
     char_player = None
     char = None
     char_seq_idx = -1
-    char_seq_digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
-    char_seq_alphabet = [
-        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-        "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-        "Y", "Z"
-    ]
     char_seq = []
-    char_seq.extend(char_seq_digits)
-    char_seq.extend(char_seq_alphabet)
+
+    def __init__(self, char_seq):
+        self.char_seq = char_seq
 
     def __enter__(self):
         self.char_player = CharacterSoundPlayer()
