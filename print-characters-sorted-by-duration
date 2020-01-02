@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# TODO:
+# * Keine Fehlerbehandlung
+# * Die Länge scheint nicht unbedingt sehr präzise zu sein:
+#
+#     > ffprobe -show_format sounds/0.mp3
+#     ...
+#     [mp3 @ 0x5622662ddc80] Estimating duration from bitrate, this may be inaccurate
+#     ...
+#
+
+for f in sounds/*.mp3; do
+    ch=${f#sounds/}; ch=${ch%.mp3};
+    ffprobe -show_format $f | awk -v ch=$ch -F= '/^duration/ { print $2, ch }'
+done 2>/dev/null | sort -n
