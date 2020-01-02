@@ -15,9 +15,9 @@ def main():
         "raten",
     )
     char_seqs = {
-        "Ziffern-dann-Alphabet": string.digits + string.ascii_uppercase,
         "Ziffern": string.digits,
         "Alphabet": string.ascii_uppercase,
+        "Ziffern-dann-Alphabet": string.digits + string.ascii_uppercase,
     }
     char_seq_ids = list(char_seqs)
     char_seq_id_default = char_seq_ids[0]
