@@ -17,6 +17,7 @@ def main():
     char_seqs = {
         "Ziffern": string.digits,
         "Alphabet": string.ascii_uppercase,
+        "Vokale": "AEIOU",
         "Ziffern-dann-Alphabet": string.digits + string.ascii_uppercase,
     }
     char_seq_ids = list(char_seqs)
