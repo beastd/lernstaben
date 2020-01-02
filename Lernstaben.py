@@ -14,10 +14,29 @@ def main():
         "vorlesen-interaktiv",
         "raten",
     )
+    char_seqs = {
+        "Ziffern-dann-Alphabet": string.digits + string.ascii_uppercase,
+        "Ziffern": string.digits,
+        "Alphabet": string.ascii_uppercase,
+    }
+    char_seq_ids = list(char_seqs)
+    char_seq_id_default = char_seq_ids[0]
 
     parser = argparse.ArgumentParser(
         prog="lernstaben",
+        formatter_class=argparse.RawTextHelpFormatter,
         description="Lerne Buchstaben auf dem Text-Terminal."
+    )
+    parser.add_argument(
+        "-s", "--character-sequence", dest="char_seq_id",
+        default=char_seq_id_default,
+        metavar="<identifier>", type=str, choices=char_seq_ids,
+        help= "\n".join((
+            "Die zu verwendende Zeichenfolge:\n    %s." % (
+                "\n    ".join(char_seq_ids),
+            ),
+            "Default ist %s." % (char_seq_id_default,),
+        ))
     )
     parser.add_argument(
         "mode",
@@ -26,11 +45,8 @@ def main():
     )
     args = parser.parse_args()
 
-    char_seq_digits = string.digits
-    char_seq_alphabet = string.ascii_uppercase
     char_seq = []
-    char_seq.extend(char_seq_digits)
-    char_seq.extend(char_seq_alphabet)
+    char_seq.extend(char_seqs[args.char_seq_id])
     with Lernstaben(char_seq) as lernstaben:
         if args.mode == "vorlesen":
             read_characters(lernstaben)
