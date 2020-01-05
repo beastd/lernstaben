@@ -136,6 +136,7 @@ class Lernstaben:
 
 class CharacterSoundPlayer:
     mp_slave = None
+    mp_slave_cmd_loadfile = "loadfile sounds/%s.mp3"
 
     def __init__(self):
         self.mp_slave = MPlayerSlave()
@@ -145,7 +146,7 @@ class CharacterSoundPlayer:
         time.sleep(1.5)
 
     def play(self, char):
-        self.mp_slave.send_command("loadfile sounds/" + char + ".mp3")
+        self.mp_slave.send_command(self.mp_slave_cmd_loadfile % (char,))
         time.sleep(1.5)
 
     def shutdown(self):
