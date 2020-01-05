@@ -103,7 +103,7 @@ class Lernstaben:
         self.char_seq = char_seq
 
     def __enter__(self):
-        self.char_player = CharacterSoundPlayer()
+        self.char_player = CharacterSoundPlayer("./sounds/")
         return self
 
     def __exit__(self, exc_type, exc_value, exc_tb):
@@ -136,9 +136,11 @@ class Lernstaben:
 
 class CharacterSoundPlayer:
     mp_slave = None
-    mp_slave_cmd_loadfile = "loadfile sounds/%s.mp3"
+    mp_slave_cmd_loadfile = None
 
-    def __init__(self):
+    def __init__(self, path_sounds):
+        self.validate_path(path_sounds)
+        self.mp_slave_cmd_loadfile = "loadfile " + path_sounds + "/%s.mp3"
         self.mp_slave = MPlayerSlave()
         self.mp_slave.start()
         # Compensate possible startup delay. Otherwise we may sleep to short in
@@ -151,6 +153,13 @@ class CharacterSoundPlayer:
 
     def shutdown(self):
         self.mp_slave.send_command("quit")
+
+    def validate_path(selft, path):
+        """For now we only allow ASCII letters and dot and slash"""
+        allowed_chars = string.digits + string.ascii_letters + "./"
+        for ch in path:
+            if ch not in allowed_chars:
+                raise Exception()
 
 
 class MPlayerSlave:
