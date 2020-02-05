@@ -94,12 +94,10 @@ def interactive_guess_characters(lernstaben):
 
 
 class Lernstaben:
-    char_player = None
-    char = None
-    char_seq_idx = -1
-    char_seq = []
-
     def __init__(self, char_seq):
+        self.char_player = None
+        self.char = None
+        self.char_seq_idx = -1
         self.char_seq = char_seq
 
     def __enter__(self):
@@ -135,9 +133,6 @@ class Lernstaben:
 
 
 class CharacterSoundPlayer:
-    mp_slave = None
-    mp_slave_cmd_loadfile = None
-
     def __init__(self, path_sounds):
         self.validate_path(path_sounds)
         self.mp_slave_cmd_loadfile = "loadfile " + path_sounds + "/%s.mp3"
@@ -163,10 +158,8 @@ class CharacterSoundPlayer:
 
 
 class MPlayerSlave:
-    mp_process = None
-
     def __init__(self):
-        pass
+        self.mp_process = None
 
     def start(self):
         if self.mp_process != None:
