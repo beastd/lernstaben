@@ -68,6 +68,7 @@ def interactive_read_characters(lernstaben):
 def read_characters(lernstaben):
     print("Zum vorzeitigen Beenden STRG+C drücken.")
     while lernstaben.select_next():
+        print("  " + lernstaben.get_character())
         lernstaben.play()
 
 
