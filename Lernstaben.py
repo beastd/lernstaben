@@ -88,6 +88,7 @@ def interactive_guess_characters(lernstaben):
         while True:
             lernstaben.play()
             s = input("Zeichen --> ")
+            time.sleep(0.6)
             if s == "":
                 continue
             elif s.upper() == ch:
