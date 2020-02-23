@@ -36,7 +36,26 @@ def main():
             "Die zu verwendende Zeichenfolge:\n    %s." % (
                 "\n    ".join(char_seq_ids),
             ),
+            "",
             "Default ist %s." % (char_seq_id_default,),
+            "",
+            "Siehe auch --character-file .",
+        ))
+    )
+    parser.add_argument(
+        "-f", "--character-file", dest="path_char_file",
+        metavar="<path>", type=str,
+        help= "\n".join((
+            "Benutze eine Datei um eine Zeichenfolge daraus zu",
+            "generieren.",
+            "",
+            "Kleinbuchstaben werden zu Großbuchstaben und doppelte",
+            "Zeichen werden zusammengefasst. ASCII-Kontrollzeichen",
+            "und Leerzeichen werden entfernt. Die entstandene Menge",
+            "wird dann sortiert als Zeichenfolge verwendet.",
+            "",
+            "Wird diese Option verwendet, dann werden zusätzliche",
+            "Angaben von --character-sequence ignoriert.",
         ))
     )
     parser.add_argument(
@@ -47,7 +66,10 @@ def main():
     args = parser.parse_args()
 
     char_seq = []
-    char_seq.extend(char_seqs[args.char_seq_id])
+    if args.path_char_file is not None:
+        char_seq.extend(gen_char_seq_from_file(args.path_char_file))
+    else:
+        char_seq.extend(char_seqs[args.char_seq_id])
     with Lernstaben(char_seq) as lernstaben:
         if args.mode == "vorlesen":
             read_characters(lernstaben)
@@ -94,6 +116,18 @@ def interactive_guess_characters(lernstaben):
             elif s.upper() == ch:
                 break
 
+def gen_char_seq_from_file(path):
+    with open(path) as fh:
+        chars = set(fh.read().upper())
+
+    chars_to_remove = [chr(x) for x in range(32)] # control chars
+    chars_to_remove.append(chr(32)) # SPACE
+    chars_to_remove.append(chr(127)) # control char
+    for ch in chars_to_remove:
+        if ch in chars:
+            chars.remove(ch)
+
+    return sorted(chars)
 
 class Lernstaben:
     def __init__(self, char_seq):
