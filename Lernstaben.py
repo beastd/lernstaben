@@ -114,7 +114,9 @@ def interactive_guess_characters(lernstaben):
             if s == "":
                 continue
             elif s.upper() == ch:
+                lernstaben.play_feedback(True)
                 break
+            lernstaben.play_feedback(False)
 
 def gen_char_seq_from_file(path):
     with open(path) as fh:
@@ -167,6 +169,18 @@ class Lernstaben:
     def play(self):
         self.char_player.play(self.char)
 
+    def play_feedback(self, positive):
+        """Play affirmative or try-again audio
+
+        The implementation is quite a stretch as it uses the char_player
+        to play words with a length of character name to give the positive
+        or negative feedback.
+        """
+        if positive:
+            self.char_player.play("richtig")
+        else:
+            self.char_player.play("nochmal")
+
 
 class CharacterSoundPlayer:
     def __init__(self, path_sounds):
@@ -180,7 +194,7 @@ class CharacterSoundPlayer:
 
     def play(self, char):
         self.mp_slave.send_command(self.mp_slave_cmd_loadfile % (char,))
-        time.sleep(1.5)
+        time.sleep(1.7)
 
     def shutdown(self):
         self.mp_slave.send_command("quit")

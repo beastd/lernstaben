@@ -50,9 +50,9 @@ if ! mkdir -p "$dir_name"; then
     exit 2
 fi
 
-for ch in $chars; do
-    if ! gtts-cli --lang de --output "$dir_name/$ch.mp3" "$ch"; then
-        echo 1>&2 "[WARN] Failed to create character '$ch'"
+for text in $chars richtig nochmal; do
+    if ! gtts-cli --lang de --output "$dir_name/$text.mp3" "$text"; then
+        echo 1>&2 "[WARN] Failed to create audio for '$text'"
 	exit_status=3
     fi
 done
