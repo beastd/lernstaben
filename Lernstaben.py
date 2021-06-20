@@ -13,6 +13,7 @@ def main():
         "vorlesen",
         "vorlesen-interaktiv",
         "raten",
+        "eingeben",
     )
     char_seqs = {
         "Ziffern": string.digits,
@@ -77,6 +78,8 @@ def main():
             interactive_read_characters(lernstaben)
         elif args.mode == "raten":
             interactive_guess_characters(lernstaben)
+        elif args.mode == "eingeben":
+            interactive_input_characters(lernstaben)
 
 
 def interactive_read_characters(lernstaben):
@@ -117,6 +120,26 @@ def interactive_guess_characters(lernstaben):
                 lernstaben.play_feedback(True)
                 break
             lernstaben.play_feedback(False)
+
+
+def interactive_input_characters(lernstaben):
+    msg = (
+        "Nach korrekter Eingabe aller Zeichen beendet sich das Programm.\n"
+        "\n"
+        "Zum vorzeitigen Beenden STRG+C drücken."
+    )
+    print(msg)
+    while lernstaben.select_next():
+        ch = lernstaben.get_character()
+        while True:
+            s = input("Zeichen --> ")
+            time.sleep(0.6)
+            if s.upper() == ch:
+                lernstaben.play()
+                lernstaben.play_feedback(True)
+                break
+            lernstaben.play_feedback(False)
+
 
 def gen_char_seq_from_file(path):
     with open(path) as fh:
