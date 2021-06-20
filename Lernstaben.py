@@ -126,15 +126,25 @@ def interactive_input_characters(lernstaben):
     msg = (
         "Nach korrekter Eingabe aller Zeichen beendet sich das Programm.\n"
         "\n"
+        "Nach einer leeren Eingabe, erklingt das vorherige Zeichen erneut.\n"
+        "\n"
         "Zum vorzeitigen Beenden STRG+C drücken."
     )
     print(msg)
+    ch_prev = None
     while lernstaben.select_next():
         ch = lernstaben.get_character()
         while True:
             s = input("Zeichen --> ")
             time.sleep(0.6)
-            if s.upper() == ch:
+            if s == "":
+                if ch_prev is not None:
+                    lernstaben.select(ch_prev.upper())
+                    lernstaben.play()
+                    lernstaben.select(ch)
+                continue
+            elif s.upper() == ch:
+                ch_prev = ch
                 lernstaben.play()
                 lernstaben.play_feedback(True)
                 break
