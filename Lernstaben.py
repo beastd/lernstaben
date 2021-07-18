@@ -14,6 +14,7 @@ def main():
         "vorlesen-interaktiv",
         "raten",
         "eingeben",
+        "Richtungen-raten",
     )
     char_seqs = {
         "Ziffern": string.digits,
@@ -80,6 +81,8 @@ def main():
             interactive_guess_characters(lernstaben)
         elif args.mode == "eingeben":
             interactive_input_characters(lernstaben)
+        elif args.mode == "Richtungen-raten":
+            interactive_guess_directions(lernstaben)
 
 
 def interactive_read_characters(lernstaben):
@@ -151,6 +154,73 @@ def interactive_input_characters(lernstaben):
             lernstaben.play_feedback(False)
 
 
+def interactive_guess_directions(lernstaben):
+    msg = (
+        "Lerne Richtungen mit den Buchstaben W, A, S und D.\n"
+        "\n"
+        "Zuerst findest Du zur Orientierung die Buchstaben auf der Tastatur.\n"
+        "\n"
+        "Dann werden jeweils alle Richtungen in einzelnen Runden abgefragt.\n"
+        "Wenn Du am Ende einer Runde alle Richtungen mindestens 2-mal\n"
+        "hintereinander ohne Fehlversuche eingegeben hast, beendet sich\n"
+        "das Programm.\n"
+        "\n"
+        "Nach einer leeren Eingabe, erklingt der gesuchte Buchstaben oder\n"
+        "die gesuchte Richtung erneut.\n"
+        "\n"
+        "Zum vorzeitigen Beenden STRG+C drücken."
+    )
+    print(msg)
+
+    # Map all keys to a play function and a state.
+    #
+    # play: Playback function for the corresponding direction
+    #
+    # state:
+    # * 0 -> last answer was wrong
+    # * 1 -> last answer was correct
+    # * 2 -> last 2 answers were correct
+    states = {
+        "W": { "state": 0, "play": lernstaben.play_word_for_direction_up },
+        "A": { "state": 0, "play": lernstaben.play_word_for_direction_left },
+        "S": { "state": 0, "play": lernstaben.play_word_for_direction_down },
+        "D": { "state": 0, "play": lernstaben.play_word_for_direction_right },
+    }
+
+    for ch in states.keys():
+        while True:
+            lernstaben.select(ch)
+            lernstaben.play()
+            s = input("Zeichen --> ")
+            time.sleep(0.6)
+            if s == "":
+                continue
+            elif s.upper() == ch:
+                ch_prev = ch
+                lernstaben.play_feedback(True)
+                break
+            lernstaben.play_feedback(False)
+
+    while sum([val["state"] for val in states.values()]) != 2*len(states):
+        direction_keys = list(states.keys)
+        random.shuffle(direction_keys)
+        for ch in direction_keys:
+            while True:
+                states[ch]["play"]()
+                s = input("Zeichen --> ")
+                time.sleep(0.6)
+                if s == "":
+                    continue
+                elif s.upper() == ch:
+                    lernstaben.play_feedback(True)
+                    if states[ch]["state"] < 2:
+                        states[ch]["state"] += 1
+                    break
+
+                lernstaben.play_feedback(False)
+                states[ch]["state"] = 0
+
+
 def gen_char_seq_from_file(path):
     with open(path) as fh:
         chars = set(fh.read().upper())
@@ -213,6 +283,18 @@ class Lernstaben:
             self.char_player.play("richtig")
         else:
             self.char_player.play("nochmal")
+
+    def play_word_for_direction_up(self):
+        self.char_player.play("oben")
+
+    def play_word_for_direction_down(self):
+        self.char_player.play("unten")
+
+    def play_word_for_direction_left(self):
+        self.char_player.play("links")
+
+    def play_word_for_direction_right(self):
+        self.char_player.play("rechts")
 
 
 class CharacterSoundPlayer:
