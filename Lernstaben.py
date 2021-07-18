@@ -99,7 +99,7 @@ def read_characters(lernstaben):
 
 def interactive_guess_characters(lernstaben):
     msg = (
-        "Nach korrekter Eingabe aller Zeichern beendet sich das Programm.\n"
+        "Nach korrekter Eingabe aller Zeichen beendet sich das Programm.\n"
         "\n"
         "Nach einer leeren oder falschen Eingabe, erklingt das gesuchte\n"
         "Zeichen erneut.\n"
