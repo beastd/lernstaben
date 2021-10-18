@@ -202,7 +202,7 @@ def interactive_guess_directions(lernstaben):
             lernstaben.play_feedback(False)
 
     while sum([val["state"] for val in states.values()]) != 2*len(states):
-        direction_keys = list(states.keys)
+        direction_keys = list(states.keys())
         random.shuffle(direction_keys)
         for ch in direction_keys:
             while True:
